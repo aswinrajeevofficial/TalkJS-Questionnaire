@@ -12,7 +12,7 @@ Talk.ready.then(function () {
         }
     });
     const session = new Talk.Session({
-        appId: "tAU5JKLC",
+        appId: "**",    //Your APP_ID here
         me: me
     });
     const other = new Talk.User({
