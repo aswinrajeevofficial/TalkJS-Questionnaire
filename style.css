@@ -1,0 +1,7 @@
+#talkjs-container{
+    position: fixed;
+    height: 500px;
+    width: 350px;
+    bottom: 0;
+    right: 0;
+}
