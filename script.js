@@ -1,3 +1,5 @@
+// const inbox = session.createInbox({selected: conversation});
+// inbox.mount(document.getElementById("talkjs-container"));
 Talk.ready.then(function () {
     const me = new Talk.User({
         id: "123456",
@@ -12,7 +14,7 @@ Talk.ready.then(function () {
         }
     });
     const session = new Talk.Session({
-        appId: "**",    //Your APP_ID here
+        appId: "*YOUR ID HERE*",
         me: me
     });
     const other = new Talk.User({
@@ -20,24 +22,24 @@ Talk.ready.then(function () {
         name: "Sebastian",
         email: "Sebastian@example.com",
         photoUrl: "https://randomuser.me/api/portraits/men/9.jpg",
-        welcomeMessage: "Hi, Do you mind answering a short questionnaire?"
+        welcomeMessage: "Hi,\nDo you mind answering a short questionnaire?"
     });
     const conversation = session.getOrCreateConversation(Talk.oneOnOneId(me, other));
     conversation.setParticipant(me);
     conversation.setParticipant(other);
     
-    const chatbox = session.createChatbox(conversation);
-    chatbox.mount(document.getElementById("talkjs-container"));
+    const chatboxPopup = session.createPopup(conversation, { keepOpen: false });
+    chatboxPopup.mount({ show: true });
     //A count variable to keep track of the questions
     let count = 0;
     let questionnaireAnswered = me.custom.questionnaireAnswered;
     //As soon as the user sends a message, this callback will be triggered
-    chatbox.on("sendMessage", function (data) { 
+    chatboxPopup.on("sendMessage", function (data) { 
         //If the count is equal to 0, it means that it is the user's first reply, 
         //and if it is equal to No and if they haven't answered the questionnaire before, we will 
         //display the first question
         if(data.message.text === 'No' && count == 0 && questionnaireAnswered == "false"){
-            chatbox.createHtmlPanel({
+            chatboxPopup.createHtmlPanel({
                 url: `questionnaire_panels/question_${count}.html`,
                 height: 100,
                 show: true
@@ -50,7 +52,7 @@ Talk.ready.then(function () {
         //question, we open the corresponding panel
         else if(count < 3 && count > 0){
             console.log(count);
-            chatbox.createHtmlPanel({
+            chatboxPopup.createHtmlPanel({
                 //We have used template literals and the count variable 
                 //to move to the corresponding panel 
                 url: `questionnaire_panels/question_${count}.html`,
@@ -61,7 +63,7 @@ Talk.ready.then(function () {
         }
         //Once the user has completed all three questions we show them the thank you panel
         else if(count === 3){
-            chatbox.createHtmlPanel({
+            chatboxPopup.createHtmlPanel({
                 url: "questionnaire_panels/thank_you.html",
                 height: 100,
                 show: true
