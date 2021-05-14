@@ -14,7 +14,7 @@ Talk.ready.then(function () {
         }
     });
     const session = new Talk.Session({
-        appId: "*YOUR ID HERE*",
+        appId: "*YOUR_ID_HERE*",
         me: me
     });
     const other = new Talk.User({
@@ -31,16 +31,16 @@ Talk.ready.then(function () {
     const chatboxPopup = session.createPopup(conversation, { keepOpen: false });
     chatboxPopup.mount({ show: true });
     //A count variable to keep track of the questions
-    let count = 0;
+    let count = 1;
     let questionnaireAnswered = me.custom.questionnaireAnswered;
     //As soon as the user sends a message, this callback will be triggered
     chatboxPopup.on("sendMessage", function (data) { 
         //If the count is equal to 0, it means that it is the user's first reply, 
         //and if it is equal to No and if they haven't answered the questionnaire before, we will 
         //display the first question
-        if(data.message.text === 'No' && count == 0 && questionnaireAnswered == "false"){
+        if(data.message.text === 'No' && count == 1 && questionnaireAnswered == "false"){
             chatboxPopup.createHtmlPanel({
-                url: `questionnaire_panels/question_${count}.html`,
+                url: `questionnaire_panels/question_1.html`,
                 height: 100,
                 show: true
             });
@@ -48,21 +48,26 @@ Talk.ready.then(function () {
             me.custom.questionnaireAnswered = "true"
             count++;
         }
-        //Since we have only three questions, for the second and third question 
-        //question, we open the corresponding panel
-        else if(count < 3 && count > 0){
+        else if(count == 2){
             console.log(count);
             chatboxPopup.createHtmlPanel({
-                //We have used template literals and the count variable 
-                //to move to the corresponding panel 
-                url: `questionnaire_panels/question_${count}.html`,
+                url: `questionnaire_panels/question_2.html`,
+                height: 100,
+                show: true,
+            });
+            count++;
+        }
+        else if(count == 3){
+            console.log(count);
+            chatboxPopup.createHtmlPanel({
+                url: `questionnaire_panels/question_3.html`,
                 height: 100,
                 show: true,
             });
             count++;
         }
         //Once the user has completed all three questions we show them the thank you panel
-        else if(count === 3){
+        else if(count === 4){
             chatboxPopup.createHtmlPanel({
                 url: "questionnaire_panels/thank_you.html",
                 height: 100,
